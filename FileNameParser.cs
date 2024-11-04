@@ -5,16 +5,15 @@ public static class FileNameParser
 	public static Result Process(string filePath, DateTime localDateTime)
 	{
 		var fileName = Path.GetFileName(filePath);
+		var newFileNameYMDHMS = localDateTime.ToString("yyyy-MM-dd HH-mm-ss");
 		string newFileName;
 
-		if (fileName.StartsWith("PXL_" + localDateTime.Year.ToString().Substring(0, 3)))
-		{
-			newFileName = localDateTime.ToString("yyyy-MM-dd HH-mm-ss") + fileName[19..];
-		}
+		if (fileName.StartsWith("PXL_" + newFileNameYMDHMS.Substring(0, 3)))
+			newFileName = newFileNameYMDHMS + fileName[23..];
+		else if (fileName.StartsWith(newFileNameYMDHMS.Substring(0, 8)))
+			newFileName = newFileNameYMDHMS + fileName[19..];
 		else
-		{
-			newFileName = localDateTime.ToString("yyyy-MM-dd HH-mm-ss") + Path.GetExtension(filePath);
-		}
+			newFileName = newFileNameYMDHMS + Path.GetExtension(filePath);
 
 		if (filePath == newFileName)
 			return Result.Fail(newFileName);

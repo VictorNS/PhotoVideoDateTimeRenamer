@@ -19,7 +19,7 @@ public static class MetadataDateTimeReader
 			if (exifSubIfdDirectory.TryGetDateTime(ExifDirectoryBase.TagDateTimeOriginal, out var dateTimeOriginal))
 			{
 				var timeZoneOriginalObject = exifSubIfdDirectory.GetString(ExifDirectoryBase.TagTimeZoneOriginal);
-				Console.WriteLine($"\tDate/Time Original: {dateTimeOriginal} Time Zone Original: {timeZoneOriginalObject}");
+				//Console.WriteLine($"\tDate/Time Original: {dateTimeOriginal} Time Zone Original: {timeZoneOriginalObject}");
 				return Result.Ok(NormilizeDateTime(dateTimeOriginal, timeZoneOriginalObject));
 			}
 			else
@@ -34,7 +34,7 @@ public static class MetadataDateTimeReader
 		{
 			if (quickTimeMovieHeaderDirectory.TryGetDateTime(QuickTimeMovieHeaderDirectory.TagCreated, out var dateCreated))
 			{
-				Console.WriteLine($"\tDateTime Created: {dateCreated}");
+				//Console.WriteLine($"\tDateTime Created: {dateCreated}");
 				return Result.Ok(NormilizeDateTime(dateCreated));
 			}
 			else
@@ -55,23 +55,23 @@ public static class MetadataDateTimeReader
 			var timeZoneSpan = DateTimeOffset.ParseExact(timeZoneString, "zzz", CultureInfo.InvariantCulture).Offset;
 			var customTimeZone = TimeZoneInfo.CreateCustomTimeZone(timeZoneString, timeZoneSpan, null, null);
 
-			if (dateTime.Kind == DateTimeKind.Local)
-				Console.WriteLine("\tThe DateTime is in local time.");
-			else if (dateTime.Kind == DateTimeKind.Utc)
-				Console.WriteLine("\tThe DateTime is in UTC.");
+			//if (dateTime.Kind == DateTimeKind.Local)
+			//	Console.WriteLine("\tThe DateTime is in local time.");
+			//else if (dateTime.Kind == DateTimeKind.Utc)
+			//	Console.WriteLine("\tThe DateTime is in UTC.");
 
 			var localDateTime = TimeZoneInfo.ConvertTime(dateTime, customTimeZone, localTimeZone);
 			return localDateTime;
 		}
 		else if (dateTime.Kind == DateTimeKind.Local)
 		{
-			Console.WriteLine("\tThe DateTime is in local time.");
+			//Console.WriteLine("\tThe DateTime is in local time.");
 			return dateTime;
 		}
 		else
 		{
-			if (dateTime.Kind == DateTimeKind.Utc)
-				Console.WriteLine("\tThe DateTime is in UTC.");
+			//if (dateTime.Kind == DateTimeKind.Utc)
+			//	Console.WriteLine("\tThe DateTime is in UTC.");
 
 			var localDateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, localTimeZone);
 			return localDateTime;

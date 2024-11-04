@@ -1,6 +1,7 @@
-﻿using PhotoVideoDateTimeRenamer;
+﻿using ConsoleApp;
+using PhotoVideoDateTimeRenamer;
 
-Console.OutputEncoding = System.Text.Encoding.Unicode;
+using var logger = new ConsoleFileLogger();
 
 try
 {
@@ -8,36 +9,47 @@ try
 
 	if (Directory.Exists(inputPath))
 	{
-		Console.WriteLine($"Working directory: {inputPath}");
+		var files = Directory.GetFiles(inputPath, "*.*");
+		logger.WriteLine($"Working directory: {inputPath} with {files.Length} files");
 
-		foreach (var filePath in Directory.GetFiles(inputPath, "*.*"))
+		foreach (var filePath in files)
 		{
-			var dTresult = MetadataDateTimeReader.Process(filePath);
-
-			if (dTresult.IsSuccess)
+			try
 			{
-				//var outFileName = Path.Combine(inputPath, result.LocalDateTime.ToString("yyyy-MM-dd HH-mm-ss"), Path.GetExtension(fileName));
-				//var outFileName = result.LocalDateTime.ToString("yyyy-MM-dd HH-mm-ss") + Path.GetExtension(filePath);
-				var fnResult = FileNameParser.Process(filePath, dTresult.LocalDateTime);
+				var dtResult = MetadataDateTimeReader.Process(filePath);
 
-				if (fnResult.IsSuccess)
-					Console.WriteLine($"{Path.GetFileName(filePath)} => {fnResult.FileName}");
-				else
-					Console.WriteLine($"{Path.GetFileName(filePath)} => keep the same");
+				if (dtResult.IsSuccess)
+				{
+					var fnResult = FileNameParser.Process(filePath, dtResult.LocalDateTime);
+
+					if (fnResult.IsSuccess)
+					{
+						logger.WriteLine($"{Path.GetFileName(filePath)} => {fnResult.FileName}");
+						File.Move(filePath, Path.Combine(inputPath, fnResult.FileName));
+					}
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				Console.WriteLine($"{Path.GetFileName(filePath)} => ???");
+				logger.WriteLine($"\t{Path.GetFileName(filePath)} :: {ex.Message}");
 			}
 		}
 	}
 	else
 	{
-		Console.WriteLine(@"Folder {0} does not exist. Please, define correct argument.", inputPath);
+		logger.WriteLine("Folder {inputPath} does not exist. Please, define correct argument.");
 	}
 }
 catch (Exception ex)
 {
-	Console.WriteLine(ex.ToString());
-	Console.ReadKey();
+	logger.WriteLine();
+	logger.WriteLine();
+	logger.WriteLine(ex.ToString());
+	return 1;
 }
+finally
+{
+	logger.MentionHerself();
+}
+
+return 0;
