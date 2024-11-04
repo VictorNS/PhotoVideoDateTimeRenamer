@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PhotoVideoDateTimeRenamer": {
+      "commandName": "Project",
+      "commandLineArgs": "c:\\Temp\\_"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoVideoDateTimeRenamer", "PhotoVideoDateTimeRenamer.csproj", "{BAAECE72-992B-4106-BFC6-BCB1690751AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BAAECE72-992B-4106-BFC6-BCB1690751AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAAECE72-992B-4106-BFC6-BCB1690751AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAAECE72-992B-4106-BFC6-BCB1690751AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAAECE72-992B-4106-BFC6-BCB1690751AF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {023CD2ED-BDEE-4E43-A3D2-C79D13D20483}
+	EndGlobalSection
+EndGlobal
