@@ -8,7 +8,7 @@ namespace PhotoVideoDateTimeRenamer;
 
 public static class MetadataDateTimeReader
 {
-	public static Result Process(string filePath)
+	public static Result Process(string filePath, TimeZoneInfo toTimeZone)
 	{
 		var directories = ImageMetadataReader.ReadMetadata(filePath);
 
@@ -20,7 +20,7 @@ public static class MetadataDateTimeReader
 			{
 				var timeZoneOriginalObject = exifSubIfdDirectory.GetString(ExifDirectoryBase.TagTimeZoneOriginal);
 				//Console.WriteLine($"\tDate/Time Original: {dateTimeOriginal} Time Zone Original: {timeZoneOriginalObject}");
-				return Result.Ok(NormilizeDateTime(dateTimeOriginal, timeZoneOriginalObject));
+				return Result.Ok(NormilizeDateTime(dateTimeOriginal, toTimeZone, timeZoneOriginalObject));
 			}
 			else
 			{
@@ -35,7 +35,7 @@ public static class MetadataDateTimeReader
 			if (quickTimeMovieHeaderDirectory.TryGetDateTime(QuickTimeMovieHeaderDirectory.TagCreated, out var dateCreated))
 			{
 				//Console.WriteLine($"\tDateTime Created: {dateCreated}");
-				return Result.Ok(NormilizeDateTime(dateCreated));
+				return Result.Ok(NormilizeDateTime(dateCreated, toTimeZone));
 			}
 			else
 			{
@@ -46,10 +46,8 @@ public static class MetadataDateTimeReader
 		return Result.Fail();
 	}
 
-	static DateTime NormilizeDateTime(DateTime dateTime, string? timeZoneString = "")
+	static DateTime NormilizeDateTime(DateTime dateTime, TimeZoneInfo toTimeZone, string? timeZoneString = "")
 	{
-		TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
-
 		if (!string.IsNullOrEmpty(timeZoneString))
 		{
 			var timeZoneSpan = DateTimeOffset.ParseExact(timeZoneString, "zzz", CultureInfo.InvariantCulture).Offset;
@@ -60,7 +58,7 @@ public static class MetadataDateTimeReader
 			//else if (dateTime.Kind == DateTimeKind.Utc)
 			//	Console.WriteLine("\tThe DateTime is in UTC.");
 
-			var localDateTime = TimeZoneInfo.ConvertTime(dateTime, customTimeZone, localTimeZone);
+			var localDateTime = TimeZoneInfo.ConvertTime(dateTime, customTimeZone, toTimeZone);
 			return localDateTime;
 		}
 		else if (dateTime.Kind == DateTimeKind.Local)
@@ -73,7 +71,7 @@ public static class MetadataDateTimeReader
 			//if (dateTime.Kind == DateTimeKind.Utc)
 			//	Console.WriteLine("\tThe DateTime is in UTC.");
 
-			var localDateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, localTimeZone);
+			var localDateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, toTimeZone);
 			return localDateTime;
 		}
 	}

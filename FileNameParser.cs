@@ -15,7 +15,7 @@ public static class FileNameParser
 		else
 			newFileName = newFileNameYMDHMS + Path.GetExtension(filePath);
 
-		if (filePath == newFileName)
+		if (fileName == newFileName)
 			return Result.Fail(newFileName);
 
 		return Result.Ok(newFileName);

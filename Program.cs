@@ -1,11 +1,34 @@
-﻿using ConsoleApp;
+﻿using System.Globalization;
+using ConsoleApp;
 using PhotoVideoDateTimeRenamer;
 
 using var logger = new ConsoleFileLogger();
 
 try
 {
-	string inputPath = args == null || args.Length == 0 ? Environment.CurrentDirectory : args[0];
+	var inputPath = Environment.CurrentDirectory;
+	var toTimeZone = TimeZoneInfo.Local;
+
+	if (args != null)
+	{
+		if (args.Length > 0)
+		{
+			inputPath = args[0];
+		}
+
+		if (args.Length > 1)
+		{
+			var timeZoneString = args[1];
+
+			if (!timeZoneString.StartsWith('+') && !timeZoneString.StartsWith('-'))
+				timeZoneString = "+" + timeZoneString;
+			if (!timeZoneString.Contains(':'))
+				timeZoneString += ":00";
+
+			var timeZoneSpan = DateTimeOffset.ParseExact(timeZoneString, "zzz", CultureInfo.InvariantCulture).Offset;
+			toTimeZone = TimeZoneInfo.CreateCustomTimeZone(timeZoneString, timeZoneSpan, null, null);
+		}
+	}
 
 	if (Directory.Exists(inputPath))
 	{
@@ -16,7 +39,7 @@ try
 		{
 			try
 			{
-				var dtResult = MetadataDateTimeReader.Process(filePath);
+				var dtResult = MetadataDateTimeReader.Process(filePath, toTimeZone);
 
 				if (dtResult.IsSuccess)
 				{
