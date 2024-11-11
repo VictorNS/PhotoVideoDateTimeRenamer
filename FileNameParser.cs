@@ -9,7 +9,7 @@ public static class FileNameParser
 		string newFileName;
 
 		if (fileName.StartsWith("PXL_" + newFileNameYMDHMS.Substring(0, 3)))
-			newFileName = newFileNameYMDHMS + fileName[23..];
+			newFileName = newFileNameYMDHMS + fileName[19..];
 		else if (fileName.StartsWith(newFileNameYMDHMS.Substring(0, 8)))
 			newFileName = newFileNameYMDHMS + fileName[19..];
 		else
